@@ -1,0 +1,31 @@
+selenium-hub:
+  image: selenium/hub
+  container_name: 'selenium-hub'
+  ports:
+    - 4444:4444
+  environment:
+    - "TZ=Asia/Tokyo"
+
+chrome:
+  image: selenium/node-chrome-debug
+  container_name: 'chrome'
+  links:
+    - selenium-hub:hub
+  ports:
+    - 5900:5900
+  environment:
+    - "TZ=Asia/Tokyo"
+  volumes:
+    - /dev/shm:/dev/shm
+
+python-selenium:
+  image: python3:selenium
+  container_name: 'python'
+  links:
+    - selenium-hub:hub
+  environment:
+    - "TZ=Asia/Tokyo"
+  command: 'tail -f /dev/null'
+  working_dir: '/root/'
+  volumes:
+    - /home/tomonori/docker/selenium:/tmp
